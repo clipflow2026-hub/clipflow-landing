@@ -3,33 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ClipFlow — Turn One Video Into a Week of Content</title>
-    <meta name="description" content="Upload your YouTube video, get clips, tweets, descriptions, and more in 2 minutes. Stop spending hours repurposing content.">
+    <title>ClipFlow — Turn One Video Into a Week of Strategic Content</title>
+    <meta name="description" content="Upload your YouTube video, get AI-detected content angles, platform-specific hooks, a 7-day content calendar, and brand voice consistency. Stop guessing what to post.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
     <style>
-        @font-face {
-            font-family: 'Cal Sans';
-            src: url('https://fonts.cdnfonts.com/s/79aboratory/CalSans-SemiBold.woff') format('woff');
-            font-weight: 600;
-            font-style: normal;
-        }
-
         :root {
-            --color-bg: #0a0a0b;
-            --color-surface: #141416;
-            --color-surface-raised: #1c1c1f;
-            --color-border: #2a2a2e;
+            --color-bg: #09090b;
+            --color-surface: #18181b;
+            --color-surface-raised: #27272a;
+            --color-border: #3f3f46;
+            --color-border-subtle: #27272a;
             --color-text: #fafafa;
             --color-text-secondary: #a1a1aa;
-            --color-accent: #6366f1;
-            --color-accent-bright: #818cf8;
+            --color-text-muted: #71717a;
+            --color-accent: #a855f7;
+            --color-accent-bright: #c084fc;
+            --color-accent-dim: #7c3aed;
             --color-success: #22c55e;
-            --color-gradient-1: #6366f1;
-            --color-gradient-2: #8b5cf6;
-            --color-gradient-3: #d946ef;
-            --font-display: 'Cal Sans', 'Instrument Sans', sans-serif;
+            --color-educational: #3b82f6;
+            --color-hottake: #f97316;
+            --color-authority: #a855f7;
+            --color-emotional: #ec4899;
+            --font-display: 'Outfit', sans-serif;
             --font-body: 'Instrument Sans', -apple-system, sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
         }
@@ -52,7 +49,7 @@
             overflow-x: hidden;
         }
 
-        /* Animated gradient background */
+        /* Subtle gradient background */
         .bg-gradient {
             position: fixed;
             top: 0;
@@ -60,22 +57,24 @@
             right: 0;
             bottom: 0;
             background: 
-                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.15), transparent),
-                radial-gradient(ellipse 60% 40% at 80% 60%, rgba(139, 92, 246, 0.1), transparent),
-                radial-gradient(ellipse 50% 30% at 20% 80%, rgba(217, 70, 239, 0.08), transparent);
+                radial-gradient(ellipse 100% 80% at 50% 0%, rgba(168, 85, 247, 0.08), transparent 50%),
+                radial-gradient(ellipse 80% 60% at 100% 50%, rgba(124, 58, 237, 0.05), transparent 50%),
+                radial-gradient(ellipse 60% 40% at 0% 80%, rgba(236, 72, 153, 0.04), transparent 50%);
             pointer-events: none;
             z-index: -1;
         }
 
-        /* Noise texture overlay */
-        .noise {
+        /* Grid pattern */
+        .grid-pattern {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            opacity: 0.03;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
             pointer-events: none;
             z-index: -1;
         }
@@ -86,15 +85,15 @@
             top: 0;
             left: 0;
             right: 0;
-            padding: 20px 40px;
+            padding: 16px 32px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            background: rgba(10, 10, 11, 0.8);
+            background: rgba(9, 9, 11, 0.85);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid var(--color-border-subtle);
         }
 
         .logo {
@@ -102,42 +101,61 @@
             align-items: center;
             gap: 10px;
             font-family: var(--font-display);
-            font-size: 24px;
-            font-weight: 600;
+            font-size: 22px;
+            font-weight: 700;
             color: var(--color-text);
             text-decoration: none;
         }
 
         .logo-icon {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, var(--color-gradient-1), var(--color-gradient-2));
-            border-radius: 10px;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dim));
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .logo-icon svg {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             fill: white;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-link {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--color-text);
         }
 
         .nav-cta {
             padding: 10px 20px;
-            background: var(--color-surface-raised);
-            border: 1px solid var(--color-border);
+            background: var(--color-accent);
+            border: none;
             border-radius: 8px;
-            color: var(--color-text);
+            color: white;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
         .nav-cta:hover {
-            background: var(--color-border);
+            background: var(--color-accent-bright);
+            transform: translateY(-1px);
         }
 
         /* Hero Section */
@@ -147,7 +165,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 120px 24px 80px;
+            padding: 140px 24px 100px;
             text-align: center;
             position: relative;
         }
@@ -156,75 +174,75 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 16px;
-            background: var(--color-surface);
-            border: 1px solid var(--color-border);
+            padding: 6px 14px;
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.2);
             border-radius: 100px;
             font-size: 13px;
             font-weight: 500;
-            color: var(--color-text-secondary);
-            margin-bottom: 32px;
+            color: var(--color-accent-bright);
+            margin-bottom: 28px;
             animation: fadeInUp 0.6s ease forwards;
         }
 
         .badge-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             background: var(--color-success);
             border-radius: 50%;
             animation: pulse 2s ease-in-out infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.1); }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
         }
 
         .hero h1 {
             font-family: var(--font-display);
-            font-size: clamp(48px, 8vw, 80px);
-            font-weight: 600;
-            line-height: 1.05;
+            font-size: clamp(44px, 7vw, 72px);
+            font-weight: 700;
+            line-height: 1.08;
             letter-spacing: -0.03em;
-            max-width: 900px;
+            max-width: 850px;
             margin-bottom: 24px;
             animation: fadeInUp 0.6s ease 0.1s forwards;
             opacity: 0;
         }
 
         .gradient-text {
-            background: linear-gradient(135deg, var(--color-gradient-1), var(--color-gradient-2), var(--color-gradient-3));
+            background: linear-gradient(135deg, var(--color-accent-bright), var(--color-emotional));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        .hero p {
-            font-size: clamp(18px, 2.5vw, 22px);
+        .hero-subtitle {
+            font-size: clamp(17px, 2vw, 20px);
             color: var(--color-text-secondary);
-            max-width: 600px;
-            margin-bottom: 48px;
+            max-width: 580px;
+            margin-bottom: 40px;
             animation: fadeInUp 0.6s ease 0.2s forwards;
             opacity: 0;
+            line-height: 1.7;
+        }
+
+        .hero-subtitle strong {
+            color: var(--color-text);
+            font-weight: 600;
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Email Form */
         .email-form {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             width: 100%;
-            max-width: 480px;
+            max-width: 440px;
             animation: fadeInUp 0.6s ease 0.3s forwards;
             opacity: 0;
         }
@@ -236,33 +254,33 @@
 
         .email-input {
             width: 100%;
-            padding: 16px 20px;
+            padding: 14px 18px;
             background: var(--color-surface);
-            border: 1px solid var(--color-border);
-            border-radius: 12px;
+            border: 1px solid var(--color-border-subtle);
+            border-radius: 10px;
             font-family: var(--font-body);
-            font-size: 16px;
+            font-size: 15px;
             color: var(--color-text);
             outline: none;
             transition: all 0.2s ease;
         }
 
         .email-input::placeholder {
-            color: var(--color-text-secondary);
+            color: var(--color-text-muted);
         }
 
         .email-input:focus {
             border-color: var(--color-accent);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
         }
 
         .submit-btn {
-            padding: 16px 28px;
-            background: linear-gradient(135deg, var(--color-gradient-1), var(--color-gradient-2));
+            padding: 14px 24px;
+            background: var(--color-accent);
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             font-family: var(--font-body);
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             color: white;
             cursor: pointer;
@@ -271,18 +289,15 @@
         }
 
         .submit-btn:hover {
+            background: var(--color-accent-bright);
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.3);
-        }
-
-        .submit-btn:active {
-            transform: translateY(0);
+            box-shadow: 0 8px 24px rgba(168, 85, 247, 0.25);
         }
 
         .form-note {
-            margin-top: 16px;
+            margin-top: 14px;
             font-size: 13px;
-            color: var(--color-text-secondary);
+            color: var(--color-text-muted);
             animation: fadeInUp 0.6s ease 0.4s forwards;
             opacity: 0;
         }
@@ -291,273 +306,498 @@
         .form-success {
             display: none;
             align-items: center;
-            gap: 12px;
-            padding: 16px 24px;
+            gap: 10px;
+            padding: 14px 20px;
             background: rgba(34, 197, 94, 0.1);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            border-radius: 12px;
+            border: 1px solid rgba(34, 197, 94, 0.25);
+            border-radius: 10px;
             color: var(--color-success);
             font-weight: 500;
+            font-size: 15px;
         }
 
-        .form-success.visible {
-            display: flex;
-        }
+        .form-success.visible { display: flex; }
+        .email-form.hidden { display: none; }
 
-        .email-form.hidden {
-            display: none;
-        }
-
-        /* Demo Visual */
-        .demo-visual {
+        /* Problem Statement */
+        .problem-strip {
             margin-top: 80px;
-            width: 100%;
-            max-width: 1000px;
-            animation: fadeInUp 0.8s ease 0.5s forwards;
-            opacity: 0;
-        }
-
-        .demo-card {
+            padding: 24px 32px;
             background: var(--color-surface);
-            border: 1px solid var(--color-border);
-            border-radius: 20px;
-            padding: 32px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .demo-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-        }
-
-        .demo-flow {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-
-        .demo-input {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            padding: 24px;
-            background: var(--color-surface-raised);
+            border: 1px solid var(--color-border-subtle);
             border-radius: 16px;
-            min-width: 200px;
+            animation: fadeInUp 0.6s ease 0.5s forwards;
+            opacity: 0;
+            max-width: 700px;
         }
 
-        .demo-input-icon {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, #ef4444, #f97316);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .demo-input-icon svg {
-            width: 32px;
-            height: 32px;
-            fill: white;
-        }
-
-        .demo-input span {
-            font-size: 14px;
-            font-weight: 500;
+        .problem-strip p {
+            font-size: 15px;
             color: var(--color-text-secondary);
+            line-height: 1.7;
         }
 
-        .demo-arrow {
-            color: var(--color-text-secondary);
-            font-size: 24px;
+        .problem-strip strong {
+            color: var(--color-text);
         }
 
-        .demo-outputs {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
-        }
-
-        .demo-output {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            padding: 16px;
-            background: var(--color-surface-raised);
-            border-radius: 12px;
-            transition: all 0.2s ease;
-        }
-
-        .demo-output:hover {
-            background: var(--color-border);
-            transform: translateY(-2px);
-        }
-
-        .demo-output-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .demo-output-icon svg {
-            width: 20px;
-            height: 20px;
-        }
-
-        .demo-output-icon.clips { background: linear-gradient(135deg, #ff0000, #cc0000); }
-        .demo-output-icon.clips svg { fill: white; }
-
-        .demo-output-icon.tiktok { background: #000; }
-        .demo-output-icon.tiktok svg { fill: white; }
-
-        .demo-output-icon.instagram { background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
-
-        .demo-output-icon.twitter { background: #000; }
-        .demo-output-icon.twitter svg { fill: white; }
-
-        .demo-output-icon.description { background: linear-gradient(135deg, #22c55e, #16a34a); }
-        .demo-output-icon.description svg { fill: white; }
-
-        .demo-output span {
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--color-text-secondary);
-            text-align: center;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 120px 24px;
-            max-width: 1200px;
+        /* Comparison Section */
+        .comparison {
+            padding: 100px 24px;
+            max-width: 1100px;
             margin: 0 auto;
+        }
+
+        .comparison-header {
+            text-align: center;
+            margin-bottom: 60px;
         }
 
         .section-label {
             font-family: var(--font-mono);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
             color: var(--color-accent-bright);
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 16px;
+            letter-spacing: 0.12em;
+            margin-bottom: 12px;
         }
 
         .section-title {
             font-family: var(--font-display);
-            font-size: clamp(36px, 5vw, 52px);
-            font-weight: 600;
-            line-height: 1.1;
+            font-size: clamp(32px, 4.5vw, 44px);
+            font-weight: 700;
+            line-height: 1.15;
             letter-spacing: -0.02em;
-            margin-bottom: 64px;
-            max-width: 600px;
         }
 
-        .features-grid {
+        .comparison-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 24px;
         }
 
-        .feature-card {
+        .comparison-card {
             padding: 32px;
+            border-radius: 16px;
+            border: 1px solid var(--color-border-subtle);
+        }
+
+        .comparison-card.others {
             background: var(--color-surface);
-            border: 1px solid var(--color-border);
-            border-radius: 20px;
-            transition: all 0.3s ease;
         }
 
-        .feature-card:hover {
-            border-color: var(--color-accent);
-            transform: translateY(-4px);
+        .comparison-card.clipflow {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(124, 58, 237, 0.05));
+            border-color: rgba(168, 85, 247, 0.2);
         }
 
-        .feature-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--color-gradient-1), var(--color-gradient-2));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .feature-icon svg {
-            width: 24px;
-            height: 24px;
-            stroke: white;
-            fill: none;
-            stroke-width: 2;
-        }
-
-        .feature-card h3 {
+        .comparison-card h3 {
             font-family: var(--font-display);
             font-size: 20px;
             font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .comparison-card.others h3 {
+            color: var(--color-text-muted);
+        }
+
+        .comparison-card.clipflow h3 {
+            color: var(--color-accent-bright);
+        }
+
+        .comparison-list {
+            list-style: none;
+        }
+
+        .comparison-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 15px;
+            color: var(--color-text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .comparison-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .comparison-card.others .comparison-list li::before {
+            content: '✕';
+            color: var(--color-text-muted);
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .comparison-card.clipflow .comparison-list li::before {
+            content: '✓';
+            color: var(--color-success);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* Core Features Section */
+        .core-features {
+            padding: 100px 24px;
+            background: var(--color-surface);
+            border-top: 1px solid var(--color-border-subtle);
+        }
+
+        .core-features-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .core-features-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .core-features-header .section-title {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .feature-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            padding: 48px;
+            background: var(--color-bg);
+            border: 1px solid var(--color-border-subtle);
+            border-radius: 20px;
+            align-items: center;
+            transition: border-color 0.3s ease;
+        }
+
+        .feature-item:hover {
+            border-color: var(--color-border);
+        }
+
+        .feature-item:nth-child(even) {
+            direction: rtl;
+        }
+
+        .feature-item:nth-child(even) > * {
+            direction: ltr;
+        }
+
+        .feature-content {
+            padding: 16px 0;
+        }
+
+        .feature-number {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--color-accent);
             margin-bottom: 12px;
         }
 
-        .feature-card p {
-            font-size: 15px;
+        .feature-content h3 {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.01em;
+        }
+
+        .feature-content p {
+            font-size: 16px;
+            color: var(--color-text-secondary);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .feature-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .feature-tag {
+            padding: 6px 12px;
+            background: var(--color-surface);
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+        }
+
+        .feature-visual {
+            background: var(--color-surface);
+            border-radius: 16px;
+            padding: 24px;
+            min-height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Angle Cards Visual */
+        .angle-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .angle-card {
+            padding: 16px;
+            background: var(--color-bg);
+            border-radius: 10px;
+            border-left: 3px solid;
+        }
+
+        .angle-card.educational { border-color: var(--color-educational); }
+        .angle-card.hottake { border-color: var(--color-hottake); }
+        .angle-card.authority { border-color: var(--color-authority); }
+        .angle-card.emotional { border-color: var(--color-emotional); }
+
+        .angle-card-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+
+        .angle-card.educational .angle-card-label { color: var(--color-educational); }
+        .angle-card.hottake .angle-card-label { color: var(--color-hottake); }
+        .angle-card.authority .angle-card-label { color: var(--color-authority); }
+        .angle-card.emotional .angle-card-label { color: var(--color-emotional); }
+
+        .angle-card-text {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Platform Cards Visual */
+        .platform-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .platform-card {
+            padding: 16px;
+            background: var(--color-bg);
+            border-radius: 10px;
+            border-left: 3px solid;
+        }
+
+        .platform-card.tiktok { border-color: #ff0050; }
+        .platform-card.shorts { border-color: #ff0000; }
+        .platform-card.reels { border-color: #e1306c; }
+
+        .platform-card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .platform-card-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .platform-card-icon svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .platform-card.tiktok .platform-card-icon { background: #000; }
+        .platform-card.shorts .platform-card-icon { background: #ff0000; }
+        .platform-card.reels .platform-card-icon { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+
+        .platform-card-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-text-secondary);
+        }
+
+        .platform-card-hook {
+            font-size: 14px;
+            color: var(--color-text);
+            line-height: 1.5;
+        }
+
+        /* Calendar Visual */
+        .calendar-visual {
+            width: 100%;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+
+        .calendar-day {
+            padding: 12px 8px;
+            background: var(--color-bg);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .calendar-day-label {
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .calendar-day-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            margin: 0 auto 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar-day-icon svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .calendar-day-icon.tiktok { background: #000; }
+        .calendar-day-icon.shorts { background: #ff0000; }
+        .calendar-day-icon.reels { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+
+        .calendar-day-platform {
+            font-size: 9px;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+        }
+
+        /* Brand Voice Visual */
+        .voice-visual {
+            width: 100%;
+        }
+
+        .voice-settings {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .voice-setting {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--color-bg);
+            border-radius: 8px;
+        }
+
+        .voice-setting-label {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+        }
+
+        .voice-setting-value {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--color-accent-bright);
+            padding: 4px 10px;
+            background: rgba(168, 85, 247, 0.1);
+            border-radius: 4px;
+        }
+
+        .voice-preview {
+            padding: 16px;
+            background: var(--color-bg);
+            border-radius: 8px;
+            border-left: 3px solid var(--color-accent);
+        }
+
+        .voice-preview-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--color-accent-bright);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .voice-preview-text {
+            font-size: 13px;
             color: var(--color-text-secondary);
             line-height: 1.6;
         }
 
         /* How It Works */
         .how-it-works {
-            padding: 120px 24px;
-            background: var(--color-surface);
-            border-top: 1px solid var(--color-border);
-            border-bottom: 1px solid var(--color-border);
+            padding: 100px 24px;
+            border-top: 1px solid var(--color-border-subtle);
         }
 
-        .how-it-works-content {
-            max-width: 1200px;
+        .how-it-works-inner {
+            max-width: 1100px;
             margin: 0 auto;
+        }
+
+        .how-it-works-header {
+            text-align: center;
+            margin-bottom: 64px;
         }
 
         .steps {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 48px;
-            margin-top: 64px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
         }
 
         .step {
+            text-align: center;
+            padding: 32px 24px;
+            background: var(--color-surface);
+            border-radius: 16px;
+            border: 1px solid var(--color-border-subtle);
             position: relative;
         }
 
         .step-number {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dim));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
             font-family: var(--font-display);
-            font-size: 64px;
-            font-weight: 600;
-            color: var(--color-surface-raised);
-            line-height: 1;
-            margin-bottom: 16px;
-            background: linear-gradient(135deg, var(--color-gradient-1), var(--color-gradient-2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            opacity: 0.3;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
         }
 
         .step h3 {
             font-family: var(--font-display);
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 600;
             margin-bottom: 12px;
         }
@@ -568,30 +808,156 @@
             line-height: 1.6;
         }
 
+        /* Pricing Section */
+        .pricing {
+            padding: 100px 24px;
+            background: var(--color-surface);
+            border-top: 1px solid var(--color-border-subtle);
+        }
+
+        .pricing-inner {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .pricing-card {
+            padding: 36px;
+            background: var(--color-bg);
+            border: 1px solid var(--color-border-subtle);
+            border-radius: 16px;
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.1);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 4px 12px;
+            background: var(--color-accent);
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .pricing-card h3 {
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .pricing-card .price {
+            font-family: var(--font-display);
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .pricing-card .price span {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+        }
+
+        .pricing-card .price-note {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            margin-bottom: 24px;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 28px;
+        }
+
+        .pricing-features li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            color: var(--color-success);
+            font-weight: 600;
+        }
+
+        .pricing-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--color-surface-raised);
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            font-family: var(--font-body);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pricing-btn:hover {
+            background: var(--color-border);
+        }
+
+        .pricing-card.featured .pricing-btn {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+            color: white;
+        }
+
+        .pricing-card.featured .pricing-btn:hover {
+            background: var(--color-accent-bright);
+        }
+
         /* CTA Section */
         .cta {
-            padding: 120px 24px;
+            padding: 100px 24px;
             text-align: center;
+            border-top: 1px solid var(--color-border-subtle);
         }
 
         .cta-content {
-            max-width: 600px;
+            max-width: 550px;
             margin: 0 auto;
         }
 
         .cta h2 {
             font-family: var(--font-display);
-            font-size: clamp(36px, 5vw, 48px);
-            font-weight: 600;
-            line-height: 1.1;
+            font-size: clamp(32px, 4.5vw, 42px);
+            font-weight: 700;
+            line-height: 1.15;
             letter-spacing: -0.02em;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .cta p {
-            font-size: 18px;
+            font-size: 17px;
             color: var(--color-text-secondary);
-            margin-bottom: 40px;
+            margin-bottom: 32px;
         }
 
         .cta .email-form {
@@ -602,20 +968,48 @@
 
         /* Footer */
         footer {
-            padding: 40px 24px;
-            border-top: 1px solid var(--color-border);
+            padding: 32px 24px;
+            border-top: 1px solid var(--color-border-subtle);
             text-align: center;
         }
 
         footer p {
             font-size: 14px;
-            color: var(--color-text-secondary);
+            color: var(--color-text-muted);
         }
 
         /* Responsive */
+        @media (max-width: 900px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-item {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .feature-item:nth-child(even) {
+                direction: ltr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 768px) {
             nav {
-                padding: 16px 20px;
+                padding: 14px 20px;
+            }
+
+            .nav-links {
+                display: none;
             }
 
             .logo {
@@ -630,60 +1024,37 @@
                 width: 100%;
             }
 
-            .demo-flow {
-                flex-direction: column;
+            .feature-item {
+                padding: 32px 24px;
             }
 
-            .demo-arrow {
-                transform: rotate(90deg);
+            .calendar-grid {
+                grid-template-columns: repeat(4, 1fr);
             }
 
-            .demo-outputs {
-                grid-template-columns: repeat(5, 1fr);
-                width: 100%;
-            }
-
-            .demo-output span {
-                font-size: 9px;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .steps {
-                gap: 32px;
+            .calendar-day:nth-child(n+5) {
+                display: none;
             }
         }
 
         @media (max-width: 480px) {
             .hero h1 {
-                font-size: 36px;
+                font-size: 34px;
             }
 
-            .demo-outputs {
-                grid-template-columns: repeat(5, 1fr);
-                gap: 6px;
+            .angle-cards {
+                grid-template-columns: 1fr;
             }
 
-            .demo-output {
-                padding: 10px 4px;
-            }
-
-            .demo-output-icon {
-                width: 28px;
-                height: 28px;
-            }
-            
-            .demo-output span {
-                font-size: 8px;
+            .platform-cards {
+                gap: 8px;
             }
         }
     </style>
 </head>
 <body>
     <div class="bg-gradient"></div>
-    <div class="noise"></div>
+    <div class="grid-pattern"></div>
 
     <nav>
         <a href="#" class="logo">
@@ -692,18 +1063,23 @@
             </div>
             ClipFlow
         </a>
+        <div class="nav-links">
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#how-it-works" class="nav-link">How It Works</a>
+            <a href="#pricing" class="nav-link">Pricing</a>
+        </div>
         <button class="nav-cta" onclick="document.querySelector('.hero .email-input').focus()">Get Early Access</button>
     </nav>
 
     <section class="hero">
         <div class="badge">
             <span class="badge-dot"></span>
-            Coming Soon — Join the Waitlist
+            Join the Waitlist — Launching Soon
         </div>
         
-        <h1>Turn one video into <span class="gradient-text">a week of content</span></h1>
+        <h1>Turn one video into <span class="gradient-text">a week of strategic content</span></h1>
         
-        <p>Upload your YouTube video. Get clips for TikTok, Reels & Shorts — plus tweets, descriptions, and more. All in 2 minutes.</p>
+        <p class="hero-subtitle">Upload your video. Get <strong>AI-detected content angles</strong>, <strong>platform-specific hooks</strong>, a <strong>7-day posting calendar</strong>, and content that actually sounds like you.</p>
         
         <form class="email-form" id="emailForm">
             <div class="email-input-wrapper">
@@ -717,134 +1093,276 @@
             You're on the list! We'll be in touch soon.
         </div>
         
-        <p class="form-note">Join the waitlist for early access. No spam, ever.</p>
+        <p class="form-note">Free trial included. No credit card required.</p>
 
-        <div class="demo-visual">
-            <div class="demo-card">
-                <div class="demo-flow">
-                    <div class="demo-input">
-                        <div class="demo-input-icon">
-                            <svg viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
-                        </div>
-                        <span>Your YouTube Video</span>
-                    </div>
-                    
-                    <span class="demo-arrow">→</span>
-                    
-                    <div class="demo-outputs">
-                        <div class="demo-output">
-                            <div class="demo-output-icon clips">
-                                <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M10 8l6 4-6 4V8z" fill="white"/></svg>
-                            </div>
-                            <span>YouTube Shorts</span>
-                        </div>
-                        <div class="demo-output">
-                            <div class="demo-output-icon tiktok">
-                                <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-                            </div>
-                            <span>TikTok</span>
-                        </div>
-                        <div class="demo-output">
-                            <div class="demo-output-icon instagram">
-                                <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="white" stroke-width="2"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" fill="none" stroke="white" stroke-width="2"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
-                            </div>
-                            <span>Reels</span>
-                        </div>
-                        <div class="demo-output">
-                            <div class="demo-output-icon twitter">
-                                <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                            </div>
-                            <span>Twitter/X</span>
-                        </div>
-                        <div class="demo-output">
-                            <div class="demo-output-icon description">
-                                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="none" stroke="white" stroke-width="2"/><polyline points="14 2 14 8 20 8" fill="none" stroke="white" stroke-width="2"/></svg>
-                            </div>
-                            <span>Description</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="problem-strip">
+            <p>Most clip tools give you 15 random moments and say "good luck." <strong>ClipFlow tells you what to post, why it works, and when to post it</strong> — in your voice, for every platform.</p>
         </div>
     </section>
 
-    <section class="features">
-        <p class="section-label">What You Get</p>
-        <h2 class="section-title">Everything you need to promote your video. One upload.</h2>
+    <section class="comparison">
+        <div class="comparison-header">
+            <p class="section-label">The Difference</p>
+            <h2 class="section-title">Not another clip generator</h2>
+        </div>
         
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
-                </div>
-                <h3>Shorts, Reels & TikToks</h3>
-                <p>AI identifies the most engaging 30-60 second moments — hooks, stories, and value bombs ready for YouTube Shorts, Instagram Reels, and TikTok.</p>
+        <div class="comparison-grid">
+            <div class="comparison-card others">
+                <h3>Other Tools</h3>
+                <ul class="comparison-list">
+                    <li>Generate 15+ clips with no context</li>
+                    <li>Same generic caption everywhere</li>
+                    <li>You figure out what to post</li>
+                    <li>Sounds like AI, not you</li>
+                    <li>Still need to plan your week</li>
+                </ul>
             </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
-                </div>
-                <h3>Twitter/X Posts</h3>
-                <p>Get ready-to-post tweets and threads that announce your video and drive engagement. Just copy, paste, post.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                </div>
-                <h3>Video Description</h3>
-                <p>SEO-optimized description with auto-generated timestamps. No more scrubbing through your video to write chapters.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                </div>
-                <h3>Newsletter Snippet</h3>
-                <p>"In this week's video..." — ready-made paragraph for your email list. Keep subscribers engaged effortlessly.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                </div>
-                <h3>Thumbnail Ideas</h3>
-                <p>3-5 catchy hook phrases optimized for clicks. Test different angles and find what converts best.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                </div>
-                <h3>2-Minute Processing</h3>
-                <p>Upload your video, grab a coffee, come back to a week's worth of content. That's it.</p>
+            <div class="comparison-card clipflow">
+                <h3>ClipFlow</h3>
+                <ul class="comparison-list">
+                    <li>5-7 strategic clips with angle explanations</li>
+                    <li>Platform-optimized hooks & captions</li>
+                    <li>Complete 7-day content calendar</li>
+                    <li>Your brand voice, everywhere</li>
+                    <li>Upload → Post. That's it.</li>
+                </ul>
             </div>
         </div>
     </section>
 
-    <section class="how-it-works">
-        <div class="how-it-works-content">
-            <p class="section-label">How It Works</p>
-            <h2 class="section-title">Three steps. Zero headaches.</h2>
+    <section class="core-features" id="features">
+        <div class="core-features-inner">
+            <div class="core-features-header">
+                <p class="section-label">Core Features</p>
+                <h2 class="section-title">Everything you need. Nothing you don't.</h2>
+            </div>
+            
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-content">
+                        <div class="feature-number">01</div>
+                        <h3>Content Angle Detection</h3>
+                        <p>AI analyzes your video and identifies the most valuable moments — then tells you exactly why each one works. No more guessing what to post.</p>
+                        <div class="feature-tags">
+                            <span class="feature-tag">🎯 Educational</span>
+                            <span class="feature-tag">🔥 Hot Takes</span>
+                            <span class="feature-tag">💡 Authority</span>
+                            <span class="feature-tag">❤️ Emotional</span>
+                        </div>
+                    </div>
+                    <div class="feature-visual">
+                        <div class="angle-cards">
+                            <div class="angle-card educational">
+                                <div class="angle-card-label">Educational</div>
+                                <div class="angle-card-text">"3 steps to fix your content workflow" — Clear framework, high save rate</div>
+                            </div>
+                            <div class="angle-card hottake">
+                                <div class="angle-card-label">Hot Take</div>
+                                <div class="angle-card-text">"Scheduling tools are killing your reach" — Contrarian, drives comments</div>
+                            </div>
+                            <div class="angle-card authority">
+                                <div class="angle-card-label">Authority</div>
+                                <div class="angle-card-text">"After 500 videos, here's what works" — Builds credibility</div>
+                            </div>
+                            <div class="angle-card emotional">
+                                <div class="angle-card-label">Emotional</div>
+                                <div class="angle-card-text">"The moment I almost quit" — Relatable, high shares</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-content">
+                        <div class="feature-number">02</div>
+                        <h3>Platform-Specific Hooks & Captions</h3>
+                        <p>Every clip gets custom hooks and captions optimized for each platform. Same clip, three different versions — ready to copy and post.</p>
+                        <div class="feature-tags">
+                            <span class="feature-tag">TikTok</span>
+                            <span class="feature-tag">YouTube Shorts</span>
+                            <span class="feature-tag">Instagram Reels</span>
+                        </div>
+                    </div>
+                    <div class="feature-visual">
+                        <div class="platform-cards">
+                            <div class="platform-card tiktok">
+                                <div class="platform-card-header">
+                                    <span class="platform-card-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></span>
+                                    <span class="platform-card-name">TikTok</span>
+                                </div>
+                                <div class="platform-card-hook">"POV: You've been doing content wrong 💀"</div>
+                            </div>
+                            <div class="platform-card shorts">
+                                <div class="platform-card-header">
+                                    <span class="platform-card-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M10 14.65v-5.3L15 12l-5 2.65zm7.77-4.33c-.77-.32-1.2-.5-1.2-.5L18 9.06c1.84-.96 2.53-3.23 1.56-5.06s-3.24-2.53-5.07-1.56L6 6.94c-1.29.68-2.07 2.04-2 3.49.07 1.42.93 2.67 2.22 3.25.03.01 1.2.5 1.2.5L6 14.93c-1.83.97-2.53 3.24-1.56 5.07.97 1.83 3.24 2.53 5.07 1.56l8.5-4.5c1.29-.68 2.06-2.04 1.99-3.49-.07-1.42-.94-2.68-2.23-3.25z"/></svg></span>
+                                    <span class="platform-card-name">YouTube Shorts</span>
+                                </div>
+                                <div class="platform-card-hook">"I wasted 6 months before learning this..."</div>
+                            </div>
+                            <div class="platform-card reels">
+                                <div class="platform-card-header">
+                                    <span class="platform-card-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M12 2.982c2.937 0 3.285.011 4.445.064a6.087 6.087 0 0 1 2.042.379 3.408 3.408 0 0 1 1.265.823 3.408 3.408 0 0 1 .823 1.265 6.087 6.087 0 0 1 .379 2.042c.053 1.16.064 1.508.064 4.445s-.011 3.285-.064 4.445a6.087 6.087 0 0 1-.379 2.042 3.643 3.643 0 0 1-2.088 2.088 6.087 6.087 0 0 1-2.042.379c-1.16.053-1.508.064-4.445.064s-3.285-.011-4.445-.064a6.087 6.087 0 0 1-2.042-.379 3.408 3.408 0 0 1-1.265-.823 3.408 3.408 0 0 1-.823-1.265 6.087 6.087 0 0 1-.379-2.042c-.053-1.16-.064-1.508-.064-4.445s.011-3.285.064-4.445a6.087 6.087 0 0 1 .379-2.042 3.408 3.408 0 0 1 .823-1.265 3.408 3.408 0 0 1 1.265-.823 6.087 6.087 0 0 1 2.042-.379c1.16-.053 1.508-.064 4.445-.064M12 1c-2.987 0-3.362.013-4.535.066a8.074 8.074 0 0 0-2.67.511 5.392 5.392 0 0 0-1.949 1.27 5.392 5.392 0 0 0-1.269 1.948 8.074 8.074 0 0 0-.51 2.67C1.012 8.638 1 9.013 1 12s.013 3.362.066 4.535a8.074 8.074 0 0 0 .511 2.67 5.392 5.392 0 0 0 1.27 1.949 5.392 5.392 0 0 0 1.948 1.269 8.074 8.074 0 0 0 2.67.51C8.638 22.988 9.013 23 12 23s3.362-.013 4.535-.066a8.074 8.074 0 0 0 2.67-.511 5.625 5.625 0 0 0 3.218-3.218 8.074 8.074 0 0 0 .51-2.67C22.988 15.362 23 14.987 23 12s-.013-3.362-.066-4.535a8.074 8.074 0 0 0-.511-2.67 5.392 5.392 0 0 0-1.27-1.949 5.392 5.392 0 0 0-1.948-1.269 8.074 8.074 0 0 0-2.67-.51C15.362 1.012 14.987 1 12 1zm0 5.351A5.649 5.649 0 1 0 17.649 12 5.649 5.649 0 0 0 12 6.351zm0 9.316A3.667 3.667 0 1 1 15.667 12 3.667 3.667 0 0 1 12 15.667zm5.872-10.859a1.32 1.32 0 1 0 1.32 1.32 1.32 1.32 0 0 0-1.32-1.32z"/></svg></span>
+                                    <span class="platform-card-name">Instagram Reels</span>
+                                </div>
+                                <div class="platform-card-hook">"The content mistake I see everywhere 👇"</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-content">
+                        <div class="feature-number">03</div>
+                        <h3>Auto Content Calendar</h3>
+                        <p>From one video, ClipFlow builds your entire week. Best clips selected, platforms assigned. Export to Notion, CSV, or Google Docs.</p>
+                        <div class="feature-tags">
+                            <span class="feature-tag">7-Day Plan</span>
+                            <span class="feature-tag">Auto-Scheduled</span>
+                            <span class="feature-tag">Export Ready</span>
+                        </div>
+                    </div>
+                    <div class="feature-visual">
+                        <div class="calendar-visual">
+                            <div class="calendar-grid">
+                                <div class="calendar-day">
+                                    <div class="calendar-day-label">Mon</div>
+                                    <div class="calendar-day-icon tiktok"><svg viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></div>
+                                    <div class="calendar-day-platform">TikTok</div>
+                                </div>
+                                <div class="calendar-day">
+                                    <div class="calendar-day-label">Tue</div>
+                                    <div class="calendar-day-icon reels"><svg viewBox="0 0 24 24" fill="white"><path d="M12 2.982c2.937 0 3.285.011 4.445.064a6.087 6.087 0 0 1 2.042.379 3.408 3.408 0 0 1 1.265.823 3.408 3.408 0 0 1 .823 1.265 6.087 6.087 0 0 1 .379 2.042c.053 1.16.064 1.508.064 4.445s-.011 3.285-.064 4.445a6.087 6.087 0 0 1-.379 2.042 3.643 3.643 0 0 1-2.088 2.088 6.087 6.087 0 0 1-2.042.379c-1.16.053-1.508.064-4.445.064s-3.285-.011-4.445-.064a6.087 6.087 0 0 1-2.042-.379 3.408 3.408 0 0 1-1.265-.823 3.408 3.408 0 0 1-.823-1.265 6.087 6.087 0 0 1-.379-2.042c-.053-1.16-.064-1.508-.064-4.445s.011-3.285.064-4.445a6.087 6.087 0 0 1 .379-2.042 3.408 3.408 0 0 1 .823-1.265 3.408 3.408 0 0 1 1.265-.823 6.087 6.087 0 0 1 2.042-.379c1.16-.053 1.508-.064 4.445-.064M12 1c-2.987 0-3.362.013-4.535.066a8.074 8.074 0 0 0-2.67.511 5.392 5.392 0 0 0-1.949 1.27 5.392 5.392 0 0 0-1.269 1.948 8.074 8.074 0 0 0-.51 2.67C1.012 8.638 1 9.013 1 12s.013 3.362.066 4.535a8.074 8.074 0 0 0 .511 2.67 5.392 5.392 0 0 0 1.27 1.949 5.392 5.392 0 0 0 1.948 1.269 8.074 8.074 0 0 0 2.67.51C8.638 22.988 9.013 23 12 23s3.362-.013 4.535-.066a8.074 8.074 0 0 0 2.67-.511 5.625 5.625 0 0 0 3.218-3.218 8.074 8.074 0 0 0 .51-2.67C22.988 15.362 23 14.987 23 12s-.013-3.362-.066-4.535a8.074 8.074 0 0 0-.511-2.67 5.392 5.392 0 0 0-1.27-1.949 5.392 5.392 0 0 0-1.948-1.269 8.074 8.074 0 0 0-2.67-.51C15.362 1.012 14.987 1 12 1zm0 5.351A5.649 5.649 0 1 0 17.649 12 5.649 5.649 0 0 0 12 6.351zm0 9.316A3.667 3.667 0 1 1 15.667 12 3.667 3.667 0 0 1 12 15.667z"/></svg></div>
+                                    <div class="calendar-day-platform">Reels</div>
+                                </div>
+                                <div class="calendar-day">
+                                    <div class="calendar-day-label">Wed</div>
+                                    <div class="calendar-day-icon shorts"><svg viewBox="0 0 24 24" fill="white"><path d="M10 14.65v-5.3L15 12l-5 2.65zm7.77-4.33c-.77-.32-1.2-.5-1.2-.5L18 9.06c1.84-.96 2.53-3.23 1.56-5.06s-3.24-2.53-5.07-1.56L6 6.94c-1.29.68-2.07 2.04-2 3.49.07 1.42.93 2.67 2.22 3.25.03.01 1.2.5 1.2.5L6 14.93c-1.83.97-2.53 3.24-1.56 5.07.97 1.83 3.24 2.53 5.07 1.56l8.5-4.5c1.29-.68 2.06-2.04 1.99-3.49-.07-1.42-.94-2.68-2.23-3.25z"/></svg></div>
+                                    <div class="calendar-day-platform">Shorts</div>
+                                </div>
+                                <div class="calendar-day">
+                                    <div class="calendar-day-label">Thu</div>
+                                    <div class="calendar-day-icon tiktok"><svg viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></div>
+                                    <div class="calendar-day-platform">TikTok</div>
+                                </div>
+                                <div class="calendar-day">
+                                    <div class="calendar-day-label">Fri</div>
+                                    <div class="calendar-day-icon reels"><svg viewBox="0 0 24 24" fill="white"><path d="M12 2.982c2.937 0 3.285.011 4.445.064a6.087 6.087 0 0 1 2.042.379 3.408 3.408 0 0 1 1.265.823 3.408 3.408 0 0 1 .823 1.265 6.087 6.087 0 0 1 .379 2.042c.053 1.16.064 1.508.064 4.445s-.011 3.285-.064 4.445a6.087 6.087 0 0 1-.379 2.042 3.643 3.643 0 0 1-2.088 2.088 6.087 6.087 0 0 1-2.042.379c-1.16.053-1.508.064-4.445.064s-3.285-.011-4.445-.064a6.087 6.087 0 0 1-2.042-.379 3.408 3.408 0 0 1-1.265-.823 3.408 3.408 0 0 1-.823-1.265 6.087 6.087 0 0 1-.379-2.042c-.053-1.16-.064-1.508-.064-4.445s.011-3.285.064-4.445a6.087 6.087 0 0 1 .379-2.042 3.408 3.408 0 0 1 .823-1.265 3.408 3.408 0 0 1 1.265-.823 6.087 6.087 0 0 1 2.042-.379c1.16-.053 1.508-.064 4.445-.064M12 1c-2.987 0-3.362.013-4.535.066a8.074 8.074 0 0 0-2.67.511 5.392 5.392 0 0 0-1.949 1.27 5.392 5.392 0 0 0-1.269 1.948 8.074 8.074 0 0 0-.51 2.67C1.012 8.638 1 9.013 1 12s.013 3.362.066 4.535a8.074 8.074 0 0 0 .511 2.67 5.392 5.392 0 0 0 1.27 1.949 5.392 5.392 0 0 0 1.948 1.269 8.074 8.074 0 0 0 2.67.51C8.638 22.988 9.013 23 12 23s3.362-.013 4.535-.066a8.074 8.074 0 0 0 2.67-.511 5.625 5.625 0 0 0 3.218-3.218 8.074 8.074 0 0 0 .51-2.67C22.988 15.362 23 14.987 23 12s-.013-3.362-.066-4.535a8.074 8.074 0 0 0-.511-2.67 5.392 5.392 0 0 0-1.27-1.949 5.392 5.392 0 0 0-1.948-1.269 8.074 8.074 0 0 0-2.67-.51C15.362 1.012 14.987 1 12 1zm0 5.351A5.649 5.649 0 1 0 17.649 12 5.649 5.649 0 0 0 12 6.351zm0 9.316A3.667 3.667 0 1 1 15.667 12 3.667 3.667 0 0 1 12 15.667z"/></svg></div>
+                                    <div class="calendar-day-platform">Reels</div>
+                                </div>
+                                <div class="calendar-day">
+                                    <div class="calendar-day-label">Sat</div>
+                                    <div class="calendar-day-icon shorts"><svg viewBox="0 0 24 24" fill="white"><path d="M10 14.65v-5.3L15 12l-5 2.65zm7.77-4.33c-.77-.32-1.2-.5-1.2-.5L18 9.06c1.84-.96 2.53-3.23 1.56-5.06s-3.24-2.53-5.07-1.56L6 6.94c-1.29.68-2.07 2.04-2 3.49.07 1.42.93 2.67 2.22 3.25.03.01 1.2.5 1.2.5L6 14.93c-1.83.97-2.53 3.24-1.56 5.07.97 1.83 3.24 2.53 5.07 1.56l8.5-4.5c1.29-.68 2.06-2.04 1.99-3.49-.07-1.42-.94-2.68-2.23-3.25z"/></svg></div>
+                                    <div class="calendar-day-platform">Shorts</div>
+                                </div>
+                                <div class="calendar-day">
+                                    <div class="calendar-day-label">Sun</div>
+                                    <div class="calendar-day-icon tiktok"><svg viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></div>
+                                    <div class="calendar-day-platform">TikTok</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-content">
+                        <div class="feature-number">04</div>
+                        <h3>Brand Voice Memory</h3>
+                        <p>Set your tone once — educational, bold, friendly, direct — and ClipFlow applies it everywhere. No more rewriting AI-generated fluff.</p>
+                        <div class="feature-tags">
+                            <span class="feature-tag">Tone Control</span>
+                            <span class="feature-tag">Emoji Settings</span>
+                            <span class="feature-tag">CTA Style</span>
+                        </div>
+                    </div>
+                    <div class="feature-visual">
+                        <div class="voice-visual">
+                            <div class="voice-settings">
+                                <div class="voice-setting">
+                                    <span class="voice-setting-label">Tone</span>
+                                    <span class="voice-setting-value">Direct & Bold</span>
+                                </div>
+                                <div class="voice-setting">
+                                    <span class="voice-setting-label">Emojis</span>
+                                    <span class="voice-setting-value">Minimal</span>
+                                </div>
+                                <div class="voice-setting">
+                                    <span class="voice-setting-label">CTA Style</span>
+                                    <span class="voice-setting-value">Soft</span>
+                                </div>
+                            </div>
+                            <div class="voice-preview">
+                                <div class="voice-preview-label">Preview in Your Voice</div>
+                                <div class="voice-preview-text">"Most creators overcomplicate this. Here's what actually moves the needle — and it takes 10 minutes. Full breakdown on the channel."</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works" id="how-it-works">
+        <div class="how-it-works-inner">
+            <div class="how-it-works-header">
+                <p class="section-label">How It Works</p>
+                <h2 class="section-title">Three steps. Two minutes. Done.</h2>
+            </div>
             
             <div class="steps">
                 <div class="step">
-                    <div class="step-number">01</div>
+                    <div class="step-number">1</div>
                     <h3>Upload or paste URL</h3>
-                    <p>Drop your video file or paste a YouTube link. We handle videos up to 2 hours long.</p>
+                    <p>Drop your video file or paste a YouTube link. We handle videos up to 2 hours.</p>
                 </div>
-                
                 <div class="step">
-                    <div class="step-number">02</div>
-                    <h3>AI does the work</h3>
-                    <p>Our AI transcribes, analyzes, and identifies the best moments. It writes all your promotional content.</p>
+                    <div class="step-number">2</div>
+                    <h3>AI does the strategy</h3>
+                    <p>We transcribe, analyze angles, generate platform copy, and build your calendar.</p>
                 </div>
-                
                 <div class="step">
-                    <div class="step-number">03</div>
-                    <h3>Download & post</h3>
-                    <p>Get your clips and copy your content. Post everywhere in minutes, not hours.</p>
+                    <div class="step-number">3</div>
+                    <h3>Export & post</h3>
+                    <p>Download clips, copy your content, and post everywhere in minutes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="pricing-inner">
+            <div class="pricing-header">
+                <p class="section-label">Pricing</p>
+                <h2 class="section-title">Simple pricing. No surprises.</h2>
+            </div>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Creator</h3>
+                    <div class="price">$29<span>/mo</span></div>
+                    <div class="price-note">Perfect for solo creators</div>
+                    <ul class="pricing-features">
+                        <li>8 videos per month</li>
+                        <li>Content angle detection</li>
+                        <li>Platform-specific hooks & captions</li>
+                        <li>7-day content calendar</li>
+                        <li>Export to Notion, CSV, Docs</li>
+                    </ul>
+                    <button class="pricing-btn" onclick="document.querySelector('.cta .email-input').focus()">Join Waitlist</button>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">Most Popular</div>
+                    <h3>Pro</h3>
+                    <div class="price">$49<span>/mo</span></div>
+                    <div class="price-note">For serious content creators</div>
+                    <ul class="pricing-features">
+                        <li>20 videos per month</li>
+                        <li>Everything in Creator</li>
+                        <li>Brand voice memory</li>
+                        <li>Priority processing</li>
+                        <li>Hook variants for A/B testing</li>
+                    </ul>
+                    <button class="pricing-btn" onclick="document.querySelector('.cta .email-input').focus()">Join Waitlist</button>
                 </div>
             </div>
         </div>
@@ -852,8 +1370,8 @@
 
     <section class="cta">
         <div class="cta-content">
-            <h2>Stop spending hours on repurposing</h2>
-            <p>Join the waitlist and be the first to turn your videos into content machines.</p>
+            <h2>Stop guessing what to post</h2>
+            <p>Join the waitlist and turn every video into a week of strategic, ready-to-post content.</p>
             
             <form class="email-form" id="emailForm2">
                 <div class="email-input-wrapper">
@@ -873,11 +1391,9 @@
         <p>© 2025 ClipFlow. Built for creators who value their time.</p>
     </footer>
 
-    <!-- Hidden iframe for form submission -->
     <iframe name="convertkit_frame" style="display:none;"></iframe>
     
     <script>
-        // Handle form submissions to ConvertKit
         function handleSubmit(formId, successId, inputId) {
             const form = document.getElementById(formId);
             const success = document.getElementById(successId);
@@ -889,11 +1405,9 @@
                 const email = input.value;
                 const submitBtn = form.querySelector('.submit-btn');
                 
-                // Show loading state
                 submitBtn.textContent = 'Joining...';
                 submitBtn.disabled = true;
                 
-                // Create hidden form that posts to ConvertKit
                 const ckForm = document.createElement('form');
                 ckForm.action = 'https://app.kit.com/forms/9000981/subscriptions';
                 ckForm.method = 'POST';
@@ -909,7 +1423,6 @@
                 ckForm.submit();
                 document.body.removeChild(ckForm);
                 
-                // Show success after brief delay
                 setTimeout(() => {
                     form.classList.add('hidden');
                     success.classList.add('visible');
@@ -925,9 +1438,18 @@
             });
         }
         
-        // Initialize forms
         handleSubmit('emailForm', 'formSuccess', 'emailInput');
         handleSubmit('emailForm2', 'formSuccess2', 'emailInput2');
+        
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
     </script>
 </body>
 </html>
